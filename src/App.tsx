@@ -75,6 +75,38 @@ function App() {
     setFilter(newFilter);
   };
 
+  const handleCompleteAllTasks = async () => {
+    try {
+      const incompleteTasks = tasks.filter((task) => !task.completed);
+
+      await Promise.all(incompleteTasks.map((task) => completeTask(task.id)));
+    } catch (error) {
+      console.error("Failed to complete all tasks:", error);
+    }
+  };
+
+  const handleIncompleteAllTasks = async () => {
+    try {
+      const completedTasks = tasks.filter((task) => task.completed);
+
+      await Promise.all(completedTasks.map((task) => incompleteTask(task.id)));
+    } catch (error) {
+      console.error("Failed to mark all tasks as incomplete:", error);
+    }
+  };
+
+  const handleDeleteCompletedTasks = async () => {
+    try {
+      const completedTasksToDelete = tasks.filter((task) => task.completed);
+
+      await Promise.all(
+        completedTasksToDelete.map((task) => deleteTask(task.id))
+      );
+    } catch (error) {
+      console.error("Failed to delete completed tasks:", error);
+    }
+  };
+
   const completedCount = tasks.filter((task) => task.completed).length;
   const totalCount = tasks.length;
 
@@ -154,6 +186,29 @@ function App() {
               </div>
             </div>
 
+            <div className="px-4 pb-4">
+              <label className="flex items-start gap-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={
+                    tasks.length > 0 && tasks.every((task) => task.completed)
+                  }
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      handleCompleteAllTasks();
+                    } else {
+                      handleIncompleteAllTasks();
+                    }
+                  }}
+                  disabled={loading || tasks.length === 0}
+                  className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus:ring-custom-accent focus:ring-2 disabled:opacity-50"
+                />
+                <span className="text-custom-primary-text font-medium">
+                  Toggle all tasks
+                </span>
+              </label>
+            </div>
+
             <TaskList
               tasks={tasks}
               loading={loading}
@@ -161,6 +216,19 @@ function App() {
               onDeleteTask={handleDeleteTask}
               onToggleComplete={handleToggleComplete}
             />
+
+            {completedCount > 0 && (
+              <div className="px-6 pt-4 border-t border-custom-border">
+                <button
+                  onClick={handleDeleteCompletedTasks}
+                  disabled={loading}
+                  className="w-full px-4 py-3 rounded-lg font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Clear {completedCount} completed task
+                  {completedCount !== 1 ? "s" : ""}
+                </button>
+              </div>
+            )}
           </div>
         </section>
       </main>
