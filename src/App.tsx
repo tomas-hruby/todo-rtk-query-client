@@ -82,6 +82,7 @@ function App() {
   const handleCreateTask = async (text: string) => {
     try {
       await createTask({ text }).unwrap();
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to create task"));
     }
@@ -90,6 +91,7 @@ function App() {
   const handleUpdateTask = async (id: string, text: string) => {
     try {
       await updateTaskText({ id, text }).unwrap();
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to update task"));
     }
@@ -98,6 +100,7 @@ function App() {
   const handleDeleteTask = async (id: string) => {
     try {
       await deleteTask(id).unwrap();
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to delete task"));
     }
@@ -110,6 +113,7 @@ function App() {
       } else {
         await incompleteTask(id).unwrap();
       }
+      dispatch(clearErrorMessage());
     } catch (error) {
       const action = completed ? "complete" : "mark as incomplete";
       dispatch(handleAsyncError(error, `Failed to ${action} task`));
@@ -124,8 +128,9 @@ function App() {
     try {
       const incompleteTasks = tasks.filter((task: any) => !task.completed);
       await Promise.all(
-        incompleteTasks.map((task: any) => completeTask(task.id))
+        incompleteTasks.map((task: any) => completeTask(task.id).unwrap())
       );
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to complete all tasks"));
     }
@@ -135,8 +140,9 @@ function App() {
     try {
       const completedTasks = tasks.filter((task: any) => task.completed);
       await Promise.all(
-        completedTasks.map((task: any) => incompleteTask(task.id))
+        completedTasks.map((task: any) => incompleteTask(task.id).unwrap())
       );
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(
         handleAsyncError(error, "Failed to mark all tasks as incomplete")
@@ -150,8 +156,9 @@ function App() {
         (task: any) => task.completed
       );
       await Promise.all(
-        completedTasksToDelete.map((task: any) => deleteTask(task.id))
+        completedTasksToDelete.map((task: any) => deleteTask(task.id).unwrap())
       );
+      dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to delete completed tasks"));
     }
@@ -182,7 +189,7 @@ function App() {
               )}
               <button
                 onClick={() => dispatch(clearErrorMessage())}
-                className="text-custom-error-text hover:text-white font-bold"
+                className="text-custom-error-text hover:text-custom-primary-text font-bold"
               >
                 ×
               </button>
