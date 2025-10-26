@@ -22,6 +22,7 @@ import {
   selectTaskStats,
   selectDisplayErrorMessage,
 } from "./store/selectors";
+import { Task } from "./types";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -127,9 +128,9 @@ function App() {
 
   const handleCompleteAllTasks = async () => {
     try {
-      const incompleteTasks = tasks.filter((task: any) => !task.completed);
+      const incompleteTasks = tasks.filter((task: Task) => !task.completed);
       await Promise.all(
-        incompleteTasks.map((task: any) => completeTask(task.id).unwrap())
+        incompleteTasks.map((task: Task) => completeTask(task.id).unwrap())
       );
       dispatch(clearErrorMessage());
     } catch (error) {
@@ -139,9 +140,9 @@ function App() {
 
   const handleIncompleteAllTasks = async () => {
     try {
-      const completedTasks = tasks.filter((task: any) => task.completed);
+      const completedTasks = tasks.filter((task: Task) => task.completed);
       await Promise.all(
-        completedTasks.map((task: any) => incompleteTask(task.id).unwrap())
+        completedTasks.map((task: Task) => incompleteTask(task.id).unwrap())
       );
       dispatch(clearErrorMessage());
     } catch (error) {
@@ -154,10 +155,10 @@ function App() {
   const handleDeleteCompletedTasks = async () => {
     try {
       const completedTasksToDelete = tasks.filter(
-        (task: any) => task.completed
+        (task: Task) => task.completed
       );
       await Promise.all(
-        completedTasksToDelete.map((task: any) => deleteTask(task.id).unwrap())
+        completedTasksToDelete.map((task: Task) => deleteTask(task.id).unwrap())
       );
       dispatch(clearErrorMessage());
     } catch (error) {
