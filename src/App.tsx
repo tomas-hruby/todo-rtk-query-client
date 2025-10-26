@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./index.css";
 import {
   useGetAllTasksQuery,
@@ -11,25 +11,42 @@ import {
 } from "./services/todoApi";
 import { TaskForm } from "./components/TaskForm";
 import { TaskList } from "./components/TaskList";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { setFilter } from "./store/appSlice";
+import { handleAsyncError, clearErrorMessage } from "./store/actions";
+import {
+  selectFilter,
+  selectCurrentTasks,
+  selectCurrentLoading,
+  selectTaskStats,
+  selectDisplayErrorMessage,
+} from "./store/selectors";
 
 function App() {
-  const [filter, setFilter] = useState<"all" | "completed">("all");
+  const dispatch = useAppDispatch();
 
-  const {
-    data: allTasks,
-    isLoading: isLoadingAll,
-    error: allTasksError,
-  } = useGetAllTasksQuery(undefined, {
-    skip: filter !== "all",
-  });
+  // Redux state
+  const filter = useAppSelector(selectFilter);
+  const tasks = useAppSelector(selectCurrentTasks);
+  const loading = useAppSelector(selectCurrentLoading);
+  const { totalCount, completedCount, allCompleted, hasCompleted } =
+    useAppSelector(selectTaskStats);
+  const errorMessage = useAppSelector(selectDisplayErrorMessage);
 
-  const {
-    data: completedTasks,
-    isLoading: isLoadingCompleted,
-    error: completedTasksError,
-  } = useGetCompletedTasksQuery(undefined, {
-    skip: filter !== "completed",
-  });
+  // RTK Query hooks with error handling and refetch
+  const { error: allTasksError, refetch: refetchAllTasks } =
+    useGetAllTasksQuery(undefined, {
+      skip: filter !== "all",
+    });
+
+  const { error: completedTasksError, refetch: refetchCompletedTasks } =
+    useGetCompletedTasksQuery(undefined, {
+      skip: filter !== "completed",
+    });
+
+  // Current query error based on filter
+  const currentQueryError =
+    filter === "all" ? allTasksError : completedTasksError;
 
   const [createTask] = useCreateTaskMutation();
   const [updateTaskText] = useUpdateTaskTextMutation();
@@ -37,84 +54,108 @@ function App() {
   const [completeTask] = useCompleteTaskMutation();
   const [incompleteTask] = useIncompleteTaskMutation();
 
-  const tasks = filter === "completed" ? completedTasks || [] : allTasks || [];
-  const loading = filter === "completed" ? isLoadingCompleted : isLoadingAll;
-  const error = filter === "completed" ? completedTasksError : allTasksError;
-
-  const handleCreateTask = (text: string) => {
-    createTask({ text }).catch((error) => {
-      console.error("Failed to create task:", error);
-    });
+  // Handler for refreshing data when queries fail
+  const handleRefreshData = async () => {
+    try {
+      if (filter === "all") {
+        await refetchAllTasks().unwrap();
+      } else {
+        await refetchCompletedTasks().unwrap();
+      }
+      dispatch(clearErrorMessage());
+    } catch (error) {
+      dispatch(handleAsyncError(error, "Failed to refresh data"));
+    }
   };
 
-  const handleUpdateTask = (id: string, text: string) => {
-    updateTaskText({ id, text }).catch((error) => {
-      console.error("Failed to update task:", error);
-    });
+  // Handle query errors
+  useEffect(() => {
+    if (currentQueryError) {
+      const errorMessage =
+        filter === "all"
+          ? "Failed to load tasks"
+          : "Failed to load completed tasks";
+      dispatch(handleAsyncError(currentQueryError, errorMessage));
+    }
+  }, [currentQueryError, filter, dispatch]);
+
+  const handleCreateTask = async (text: string) => {
+    try {
+      await createTask({ text }).unwrap();
+    } catch (error) {
+      dispatch(handleAsyncError(error, "Failed to create task"));
+    }
   };
 
-  const handleDeleteTask = (id: string) => {
-    deleteTask(id).catch((error) => {
-      console.error("Failed to delete task:", error);
-    });
+  const handleUpdateTask = async (id: string, text: string) => {
+    try {
+      await updateTaskText({ id, text }).unwrap();
+    } catch (error) {
+      dispatch(handleAsyncError(error, "Failed to update task"));
+    }
   };
 
-  const handleToggleComplete = (id: string, completed: boolean) => {
-    if (completed) {
-      completeTask(id).catch((error) => {
-        console.error("Failed to complete task:", error);
-      });
-    } else {
-      incompleteTask(id).catch((error) => {
-        console.error("Failed to incomplete task:", error);
-      });
+  const handleDeleteTask = async (id: string) => {
+    try {
+      await deleteTask(id).unwrap();
+    } catch (error) {
+      dispatch(handleAsyncError(error, "Failed to delete task"));
+    }
+  };
+
+  const handleToggleComplete = async (id: string, completed: boolean) => {
+    try {
+      if (completed) {
+        await completeTask(id).unwrap();
+      } else {
+        await incompleteTask(id).unwrap();
+      }
+    } catch (error) {
+      const action = completed ? "complete" : "mark as incomplete";
+      dispatch(handleAsyncError(error, `Failed to ${action} task`));
     }
   };
 
   const handleFilterChange = (newFilter: "all" | "completed") => {
-    setFilter(newFilter);
+    dispatch(setFilter(newFilter));
   };
 
   const handleCompleteAllTasks = async () => {
     try {
-      const incompleteTasks = tasks.filter((task) => !task.completed);
-
-      await Promise.all(incompleteTasks.map((task) => completeTask(task.id)));
+      const incompleteTasks = tasks.filter((task: any) => !task.completed);
+      await Promise.all(
+        incompleteTasks.map((task: any) => completeTask(task.id))
+      );
     } catch (error) {
-      console.error("Failed to complete all tasks:", error);
+      dispatch(handleAsyncError(error, "Failed to complete all tasks"));
     }
   };
 
   const handleIncompleteAllTasks = async () => {
     try {
-      const completedTasks = tasks.filter((task) => task.completed);
-
-      await Promise.all(completedTasks.map((task) => incompleteTask(task.id)));
+      const completedTasks = tasks.filter((task: any) => task.completed);
+      await Promise.all(
+        completedTasks.map((task: any) => incompleteTask(task.id))
+      );
     } catch (error) {
-      console.error("Failed to mark all tasks as incomplete:", error);
+      dispatch(
+        handleAsyncError(error, "Failed to mark all tasks as incomplete")
+      );
     }
   };
 
   const handleDeleteCompletedTasks = async () => {
     try {
-      const completedTasksToDelete = tasks.filter((task) => task.completed);
-
+      const completedTasksToDelete = tasks.filter(
+        (task: any) => task.completed
+      );
       await Promise.all(
-        completedTasksToDelete.map((task) => deleteTask(task.id))
+        completedTasksToDelete.map((task: any) => deleteTask(task.id))
       );
     } catch (error) {
-      console.error("Failed to delete completed tasks:", error);
+      dispatch(handleAsyncError(error, "Failed to delete completed tasks"));
     }
   };
-
-  const completedCount = tasks.filter((task) => task.completed).length;
-  const totalCount = tasks.length;
-
-  const errorMessage = error
-    ? "status" in error
-      ? `API Error: ${error.status}`
-      : error.message || "An unexpected error occurred"
-    : null;
 
   return (
     <div className="min-h-screen bg-custom-background text-custom-primary-text">
@@ -130,6 +171,22 @@ function App() {
         {errorMessage && (
           <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-4 rounded-lg flex justify-between items-center">
             <span>{errorMessage}</span>
+            <div className="flex gap-2 ml-4">
+              {currentQueryError && (
+                <button
+                  onClick={handleRefreshData}
+                  className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium transition-colors"
+                >
+                  Retry
+                </button>
+              )}
+              <button
+                onClick={() => dispatch(clearErrorMessage())}
+                className="text-custom-error-text hover:text-white font-bold"
+              >
+                ×
+              </button>
+            </div>
           </div>
         )}
 
@@ -190,9 +247,7 @@ function App() {
               <label className="flex items-start gap-4 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={
-                    tasks.length > 0 && tasks.every((task) => task.completed)
-                  }
+                  checked={allCompleted}
                   onChange={(e) => {
                     if (e.target.checked) {
                       handleCompleteAllTasks();
