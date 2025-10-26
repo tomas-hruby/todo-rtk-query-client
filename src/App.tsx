@@ -174,9 +174,9 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
-        {errorMessage && (
-          <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-4 rounded-lg flex justify-between items-center">
+      {errorMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-6">
+          <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-4 rounded-lg flex justify-between items-center shadow-lg">
             <span>{errorMessage}</span>
             <div className="flex gap-2 ml-4">
               {currentQueryError && (
@@ -195,8 +195,10 @@ function App() {
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
+      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
         <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
           <div className="p-6">
             <h2 className="text-2xl font-semibold mb-6 text-custom-primary-text">
