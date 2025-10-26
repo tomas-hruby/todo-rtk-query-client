@@ -175,7 +175,12 @@ function App() {
       </header>
 
       {errorMessage && (
-        <div className="fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-4 sm:px-6">
+        <div 
+          className="fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-4 sm:px-6"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
           <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-3 sm:p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 shadow-lg">
             <span className="text-sm sm:text-base">{errorMessage}</span>
             <div className="flex gap-2 w-full sm:w-auto justify-end sm:ml-4">
@@ -183,6 +188,7 @@ function App() {
                 <button
                   onClick={handleRefreshData}
                   className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium transition-colors"
+                  aria-label="Retry loading data"
                 >
                   Retry
                 </button>
@@ -190,6 +196,7 @@ function App() {
               <button
                 onClick={() => dispatch(clearErrorMessage())}
                 className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl"
+                aria-label="Close error message"
               >
                 ×
               </button>
@@ -236,6 +243,7 @@ function App() {
                       ? "bg-custom-button-dark text-custom-primary-text"
                       : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
                   }`}
+                  aria-label="Show all tasks"
                 >
                   All Tasks
                 </button>
@@ -246,6 +254,7 @@ function App() {
                       ? "bg-custom-button-dark text-custom-primary-text"
                       : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
                   }`}
+                  aria-label="Show completed tasks only"
                 >
                   Completed Only
                 </button>
@@ -266,6 +275,7 @@ function App() {
                   }}
                   disabled={loading || tasks.length === 0}
                   className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus:ring-custom-accent focus:ring-2 disabled:opacity-50"
+                  aria-label="Toggle all tasks completion status"
                 />
                 <span className="text-custom-primary-text font-medium text-sm sm:text-base">
                   Toggle all tasks
@@ -287,6 +297,7 @@ function App() {
                   onClick={handleDeleteCompletedTasks}
                   disabled={loading}
                   className="w-full px-4 py-3 rounded-lg text-sm sm:text-base font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  aria-label={`Delete ${completedCount} completed task${completedCount !== 1 ? 's' : ''}`}
                 >
                   Clear {completedCount} completed task
                   {completedCount !== 1 ? "s" : ""}

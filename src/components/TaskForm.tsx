@@ -27,10 +27,13 @@ export const TaskForm: React.FC<TaskFormProps> = ({ onCreateTask }) => {
         placeholder="Enter a new task..."
         className="flex-1 bg-custom-background border border-custom-border rounded-lg px-4 py-3 text-custom-primary-text placeholder-custom-secondary-text focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent transition-all text-sm sm:text-base"
         required
+        aria-label="Task description"
       />
       <button
         type="submit"
-        className="w-full sm:w-auto bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text font-medium px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-button-dark focus:ring-opacity-50 text-sm sm:text-base"
+        className="w-full sm:w-auto bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text font-medium px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-button-dark focus:ring-opacity-50 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed  "
+        disabled={!taskText.trim()}
+        aria-label="Add new task"
       >
         Add Task
       </button>
