@@ -142,11 +142,14 @@ export const todoApi = createApi({
         method: "POST",
       }),
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        let originalTask: Task | undefined;
+
         const patchResults = [
           dispatch(
             todoApi.util.updateQueryData("getAllTasks", undefined, (draft) => {
               const task = draft.find((t) => t.id === id);
               if (task) {
+                originalTask = { ...task }; // Capture original task data
                 task.completed = true;
                 task.completedDate = Date.now();
               }
@@ -157,10 +160,20 @@ export const todoApi = createApi({
               "getCompletedTasks",
               undefined,
               (draft) => {
-                const task = draft.find((t) => t.id === id);
-                if (task) {
-                  task.completed = true;
-                  task.completedDate = Date.now();
+                if (originalTask) {
+                  // Add the task to completed tasks if not already there
+                  const existingIndex = draft.findIndex((t) => t.id === id);
+                  const completedTask = {
+                    ...originalTask,
+                    completed: true,
+                    completedDate: Date.now(),
+                  };
+
+                  if (existingIndex !== -1) {
+                    draft[existingIndex] = completedTask;
+                  } else {
+                    draft.push(completedTask);
+                  }
                 }
               }
             )
