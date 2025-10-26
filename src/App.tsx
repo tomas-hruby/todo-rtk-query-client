@@ -11,6 +11,7 @@ import {
 } from "./services/todoApi";
 import { TaskForm } from "./components/TaskForm";
 import { TaskList } from "./components/TaskList";
+import { Footer } from "./components/Footer";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setFilter } from "./store/appSlice";
 import { handleAsyncError, clearErrorMessage } from "./store/actions";
@@ -165,7 +166,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-custom-background text-custom-primary-text">
+    <div className="min-h-screen bg-custom-background text-custom-primary-text flex flex-col">
       <header className="bg-custom-surface shadow-lg border-b border-custom-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 text-custom-primary-text">
@@ -205,7 +206,7 @@ function App() {
         </div>
       )}
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-8">
+      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-8">
         <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
           <div className="p-4 sm:p-6">
             <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-custom-primary-text">
@@ -307,6 +308,8 @@ function App() {
           </div>
         </section>
       </main>
+
+      <Footer />
     </div>
   );
 }
