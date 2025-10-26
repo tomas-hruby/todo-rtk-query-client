@@ -19,7 +19,6 @@ function App() {
     data: allTasks,
     isLoading: isLoadingAll,
     error: allTasksError,
-    refetch: refetchAllTasks,
   } = useGetAllTasksQuery(undefined, {
     skip: filter !== "all",
   });
@@ -28,7 +27,6 @@ function App() {
     data: completedTasks,
     isLoading: isLoadingCompleted,
     error: completedTasksError,
-    refetch: refetchCompletedTasks,
   } = useGetCompletedTasksQuery(undefined, {
     skip: filter !== "completed",
   });
@@ -75,14 +73,6 @@ function App() {
 
   const handleFilterChange = (newFilter: "all" | "completed") => {
     setFilter(newFilter);
-  };
-
-  const handleRefresh = () => {
-    if (filter === "completed") {
-      refetchCompletedTasks();
-    } else {
-      refetchAllTasks();
-    }
   };
 
   const completedCount = tasks.filter((task) => task.completed).length;
@@ -160,13 +150,6 @@ function App() {
                   }`}
                 >
                   Completed Only
-                </button>
-                <button
-                  onClick={handleRefresh}
-                  disabled={loading}
-                  className="px-4 py-2 rounded-lg font-medium bg-custom-button-dark text-custom-primary-text hover:bg-custom-button-dark-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Refresh ↺
                 </button>
               </div>
             </div>
