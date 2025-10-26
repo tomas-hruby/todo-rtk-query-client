@@ -167,18 +167,18 @@ function App() {
   return (
     <div className="min-h-screen bg-custom-background text-custom-primary-text">
       <header className="bg-custom-surface shadow-lg border-b border-custom-border">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <h1 className="text-4xl font-bold text-center mb-2 text-custom-primary-text">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 text-custom-primary-text">
             Todo App
           </h1>
         </div>
       </header>
 
       {errorMessage && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-6">
-          <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-4 rounded-lg flex justify-between items-center shadow-lg">
-            <span>{errorMessage}</span>
-            <div className="flex gap-2 ml-4">
+        <div className="fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-4 sm:px-6">
+          <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-3 sm:p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 shadow-lg">
+            <span className="text-sm sm:text-base">{errorMessage}</span>
+            <div className="flex gap-2 w-full sm:w-auto justify-end sm:ml-4">
               {currentQueryError && (
                 <button
                   onClick={handleRefreshData}
@@ -189,7 +189,7 @@ function App() {
               )}
               <button
                 onClick={() => dispatch(clearErrorMessage())}
-                className="text-custom-error-text hover:text-custom-primary-text font-bold"
+                className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl"
               >
                 ×
               </button>
@@ -198,10 +198,10 @@ function App() {
         </div>
       )}
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-8">
         <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-custom-primary-text">
+          <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-custom-primary-text">
               Add New Task
             </h2>
             <TaskForm onCreateTask={handleCreateTask} />
@@ -209,18 +209,18 @@ function App() {
         </section>
 
         <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
-          <div className="p-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <div className="flex flex-wrap gap-3">
-                <span className="bg-custom-background px-4 py-2 rounded-full text-sm font-medium border border-custom-border">
+          <div className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-6">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
                   Total:{" "}
                   <span className="text-custom-accent">{totalCount}</span>
                 </span>
-                <span className="bg-custom-background px-4 py-2 rounded-full text-sm font-medium border border-custom-border">
+                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
                   Completed:{" "}
                   <span className="text-custom-price-up">{completedCount}</span>
                 </span>
-                <span className="bg-custom-background px-4 py-2 rounded-full text-sm font-medium border border-custom-border">
+                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
                   Remaining:{" "}
                   <span className="text-custom-price-down">
                     {totalCount - completedCount}
@@ -228,10 +228,10 @@ function App() {
                 </span>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   onClick={() => handleFilterChange("all")}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
                     filter === "all"
                       ? "bg-custom-button-dark text-custom-primary-text"
                       : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
@@ -241,7 +241,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => handleFilterChange("completed")}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
                     filter === "completed"
                       ? "bg-custom-button-dark text-custom-primary-text"
                       : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
@@ -267,7 +267,7 @@ function App() {
                   disabled={loading || tasks.length === 0}
                   className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus:ring-custom-accent focus:ring-2 disabled:opacity-50"
                 />
-                <span className="text-custom-primary-text font-medium">
+                <span className="text-custom-primary-text font-medium text-sm sm:text-base">
                   Toggle all tasks
                 </span>
               </label>
@@ -282,11 +282,11 @@ function App() {
             />
 
             {completedCount > 0 && (
-              <div className="px-6 pt-4 border-t border-custom-border">
+              <div className="px-4 sm:px-6 pt-4 border-t border-custom-border">
                 <button
                   onClick={handleDeleteCompletedTasks}
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-lg font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full px-4 py-3 rounded-lg text-sm sm:text-base font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Clear {completedCount} completed task
                   {completedCount !== 1 ? "s" : ""}

@@ -2,16 +2,13 @@ import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "./index";
 import { todoApi } from "../services/todoApi";
 
-// Basic selectors
 export const selectFilter = (state: RootState) => state.app.filter;
 export const selectErrorMessage = (state: RootState) => state.app.errorMessage;
 
-// RTK Query selectors
 export const selectAllTasks = todoApi.endpoints.getAllTasks.select(undefined);
 export const selectCompletedTasks =
   todoApi.endpoints.getCompletedTasks.select(undefined);
 
-// Derived selectors
 export const selectCurrentTasks = createSelector(
   [selectFilter, selectAllTasks, selectCompletedTasks],
   (filter, allTasksResult, completedTasksResult) => {
