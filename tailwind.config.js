@@ -7,7 +7,6 @@ module.exports = {
         custom: {
           background: "#121212",
           surface: "#1e1e1e",
-          header: "#0d1117",
           "primary-text": "#e0e0e0",
           "secondary-text": "#a0a0a0",
           border: "#333333",

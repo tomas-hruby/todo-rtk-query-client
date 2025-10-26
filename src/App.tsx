@@ -29,7 +29,7 @@ function App() {
   const filter = useAppSelector(selectFilter);
   const tasks = useAppSelector(selectCurrentTasks);
   const loading = useAppSelector(selectCurrentLoading);
-  const { totalCount, completedCount, allCompleted, hasCompleted } =
+  const { totalCount, completedCount, allCompleted } =
     useAppSelector(selectTaskStats);
   const errorMessage = useAppSelector(selectDisplayErrorMessage);
 
@@ -159,8 +159,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-custom-background text-custom-primary-text">
-      <header className="bg-custom-header shadow-lg border-b border-custom-border">
-        <div className="max-w-4xl mx-auto px-6 py-8">
+      <header className="bg-custom-surface shadow-lg border-b border-custom-border">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <h1 className="text-4xl font-bold text-center mb-2 text-custom-primary-text">
             Todo App
           </h1>
