@@ -2,7 +2,7 @@
 
 A modern, responsive Todo application built with React, TypeScript, Redux Toolkit Query, and Tailwind CSS. This application provides a clean, intuitive interface for managing tasks with real-time updates and optimistic UI updates.
 
-![Todo App Screenshot](https://via.placeholder.com/800x600/1a202c/ffffff?text=Todo+App+Screenshot)
+![Todo App Screenshot](https://i.ibb.co/V0xbvFnV/todo-app.png)
 
 ## ✨ Features
 
