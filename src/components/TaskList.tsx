@@ -10,7 +10,7 @@ interface TaskListProps {
   onToggleComplete: (id: string, completed: boolean) => void;
 }
 
-export const TaskList: React.FC<TaskListProps> = ({
+export const TaskList = React.memo<TaskListProps>(({
   tasks,
   loading,
   onUpdateTask,
@@ -57,4 +57,6 @@ export const TaskList: React.FC<TaskListProps> = ({
       ))}
     </div>
   );
-};
+});
+
+TaskList.displayName = 'TaskList';

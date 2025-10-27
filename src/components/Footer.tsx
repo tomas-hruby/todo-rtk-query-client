@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Footer: React.FC = () => {
+export const Footer = React.memo(() => {
   return (
     <footer className="bg-custom-surface border-t border-custom-border mt-auto">
       <p className="text-sm text-custom-secondary-text text-center py-3">
@@ -8,4 +8,6 @@ export const Footer: React.FC = () => {
       </p>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';

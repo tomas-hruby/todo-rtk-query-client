@@ -8,7 +8,7 @@ interface TaskItemProps {
   onToggleComplete: (id: string, completed: boolean) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({
+export const TaskItem = React.memo<TaskItemProps>(({
   task,
   onUpdate,
   onDelete,
@@ -118,4 +118,6 @@ export const TaskItem: React.FC<TaskItemProps> = ({
       </div>
     </div>
   );
-};
+});
+
+TaskItem.displayName = 'TaskItem';

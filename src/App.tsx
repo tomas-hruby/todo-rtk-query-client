@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import "./index.css";
 import {
   useGetAllTasksQuery,
@@ -57,7 +57,7 @@ function App() {
   const [incompleteTask] = useIncompleteTaskMutation();
 
   // Handler for refreshing data when queries fail
-  const handleRefreshData = async () => {
+  const handleRefreshData = useCallback(async () => {
     try {
       if (filter === "all") {
         await refetchAllTasks().unwrap();
@@ -68,7 +68,7 @@ function App() {
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to refresh data"));
     }
-  };
+  }, [filter, refetchAllTasks, refetchCompletedTasks, dispatch]);
 
   // Handle query errors
   useEffect(() => {
@@ -81,34 +81,34 @@ function App() {
     }
   }, [currentQueryError, filter, dispatch]);
 
-  const handleCreateTask = async (text: string) => {
+  const handleCreateTask = useCallback(async (text: string) => {
     try {
       await createTask({ text }).unwrap();
       dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to create task"));
     }
-  };
+  }, [createTask, dispatch]);
 
-  const handleUpdateTask = async (id: string, text: string) => {
+  const handleUpdateTask = useCallback(async (id: string, text: string) => {
     try {
       await updateTaskText({ id, text }).unwrap();
       dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to update task"));
     }
-  };
+  }, [updateTaskText, dispatch]);
 
-  const handleDeleteTask = async (id: string) => {
+  const handleDeleteTask = useCallback(async (id: string) => {
     try {
       await deleteTask(id).unwrap();
       dispatch(clearErrorMessage());
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to delete task"));
     }
-  };
+  }, [deleteTask, dispatch]);
 
-  const handleToggleComplete = async (id: string, completed: boolean) => {
+  const handleToggleComplete = useCallback(async (id: string, completed: boolean) => {
     try {
       if (completed) {
         await completeTask(id).unwrap();
@@ -120,13 +120,13 @@ function App() {
       const action = completed ? "complete" : "mark as incomplete";
       dispatch(handleAsyncError(error, `Failed to ${action} task`));
     }
-  };
+  }, [completeTask, incompleteTask, dispatch]);
 
-  const handleFilterChange = (newFilter: "all" | "completed") => {
+  const handleFilterChange = useCallback((newFilter: "all" | "completed") => {
     dispatch(setFilter(newFilter));
-  };
+  }, [dispatch]);
 
-  const handleCompleteAllTasks = async () => {
+  const handleCompleteAllTasks = useCallback(async () => {
     try {
       const incompleteTasks = tasks.filter((task: Task) => !task.completed);
       await Promise.all(
@@ -136,9 +136,9 @@ function App() {
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to complete all tasks"));
     }
-  };
+  }, [tasks, completeTask, dispatch]);
 
-  const handleIncompleteAllTasks = async () => {
+  const handleIncompleteAllTasks = useCallback(async () => {
     try {
       const completedTasks = tasks.filter((task: Task) => task.completed);
       await Promise.all(
@@ -150,9 +150,9 @@ function App() {
         handleAsyncError(error, "Failed to mark all tasks as incomplete")
       );
     }
-  };
+  }, [tasks, incompleteTask, dispatch]);
 
-  const handleDeleteCompletedTasks = async () => {
+  const handleDeleteCompletedTasks = useCallback(async () => {
     try {
       const completedTasksToDelete = tasks.filter(
         (task: Task) => task.completed
@@ -164,9 +164,10 @@ function App() {
     } catch (error) {
       dispatch(handleAsyncError(error, "Failed to delete completed tasks"));
     }
-  };
+  }, [tasks, deleteTask, dispatch]);
 
   return (
+    console.log("App rendered"),
     <div className="min-h-screen bg-custom-background text-custom-primary-text flex flex-col">
       <header className="bg-custom-surface shadow-lg border-b border-custom-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">

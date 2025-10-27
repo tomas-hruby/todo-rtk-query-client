@@ -4,7 +4,7 @@ interface TaskFormProps {
   onCreateTask: (text: string) => void;
 }
 
-export const TaskForm: React.FC<TaskFormProps> = ({ onCreateTask }) => {
+export const TaskForm = React.memo<TaskFormProps>(({ onCreateTask }) => {
   const [taskText, setTaskText] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,4 +39,6 @@ export const TaskForm: React.FC<TaskFormProps> = ({ onCreateTask }) => {
       </button>
     </form>
   );
-};
+});
+
+TaskForm.displayName = 'TaskForm';
