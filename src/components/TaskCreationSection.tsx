@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "./Button";
 
 interface TaskCreationSectionProps {
   onCreateTask: (text: string) => void;
@@ -35,14 +36,17 @@ export const TaskCreationSection = React.memo<TaskCreationSectionProps>(
               required
               aria-label="Task description"
             />
-            <button
+            <Button
               type="submit"
-              className="w-full sm:w-auto bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text font-medium px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-button-dark focus:ring-opacity-50 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="dark"
+              size="lg"
+              fullWidth={true}
+              className="sm:w-auto"
               disabled={!taskText.trim()}
               aria-label="Add new task"
             >
               Add Task
-            </button>
+            </Button>
           </form>
         </div>
       </section>

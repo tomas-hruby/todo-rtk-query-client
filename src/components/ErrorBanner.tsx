@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppDispatch } from "../store/hooks";
 import { clearErrorMessage } from "../store/actions";
+import { Button } from "./Button";
 
 interface ErrorBannerProps {
   errorMessage: string;
@@ -23,17 +24,18 @@ export const ErrorBanner = React.memo<ErrorBannerProps>(
           <span className="text-sm sm:text-base">{errorMessage}</span>
           <div className="flex gap-2 w-full sm:w-auto justify-end sm:ml-4">
             {currentQueryError && (
-              <button
+              <Button
                 onClick={onRetry}
-                className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium"
+                variant="dark"
+                size="sm"
                 aria-label="Retry loading data"
               >
                 Retry
-              </button>
+              </Button>
             )}
             <button
               onClick={() => dispatch(clearErrorMessage())}
-              className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl"
+              className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl focus:outline-none focus:ring-2 focus:ring-custom-accent focus:ring-opacity-50"
               aria-label="Close error message"
             >
               ×

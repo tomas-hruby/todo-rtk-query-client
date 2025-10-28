@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Task } from "../types";
+import { Button } from "./Button";
 
 interface TaskItemProps {
   task: Task;
@@ -57,20 +58,22 @@ export const TaskItem = React.memo<TaskItemProps>(
                   aria-label="Edit task description"
                 />
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <button
+                  <Button
                     onClick={handleUpdate}
-                    className="rounded-lg bg-custom-price-up px-4 py-2 text-sm font-medium text-white hover:bg-green-600 sm:text-base"
+                    variant="success"
+                    size="md"
                     aria-label="Save task changes"
                   >
                     Save
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={handleCancel}
-                    className="rounded-lg border border-custom-border bg-custom-background px-4 py-2 text-sm font-medium text-custom-secondary-text hover:bg-custom-border sm:text-base"
+                    variant="secondary"
+                    size="md"
                     aria-label="Cancel editing"
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
@@ -87,20 +90,22 @@ export const TaskItem = React.memo<TaskItemProps>(
                   </span>
 
                   <div className="flex gap-2 flex-shrink-0">
-                    <button
+                    <Button
                       onClick={() => setIsEditing(true)}
-                      className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded-lg text-xs sm:text-sm font-medium"
+                      variant="dark"
+                      size="sm"
                       aria-label={`Edit task: ${task.text}`}
                     >
                       Edit
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => onDelete(task.id)}
-                      className="bg-custom-price-down hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs sm:text-sm font-medium"
+                      variant="danger"
+                      size="sm"
                       aria-label={`Delete task: ${task.text}`}
                     >
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
