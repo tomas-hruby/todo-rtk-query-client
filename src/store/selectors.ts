@@ -7,6 +7,10 @@ export const selectFilter = (state: RootState) => {
   return state.app.filter;
 };
 
+export const selectTheme = (state: RootState) => {
+  return state.app.theme;
+};
+
 export const selectErrorMessage = (state: RootState) => {
   return state.app.errorMessage;
 };

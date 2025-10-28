@@ -19,6 +19,7 @@ import { setFilter } from "./store/appSlice";
 import { handleAsyncError, clearErrorMessage } from "./store/actions";
 import {
   selectFilter,
+  selectTheme,
   selectCurrentTasks,
   selectCurrentLoading,
   selectTaskStats,
@@ -32,6 +33,7 @@ function App() {
 
   // Redux state
   const filter = useAppSelector(selectFilter);
+  const theme = useAppSelector(selectTheme);
   const tasks = useAppSelector(selectCurrentTasks);
   const loading = useAppSelector(selectCurrentLoading);
   const { totalCount, completedCount, allCompleted } =
@@ -70,6 +72,10 @@ function App() {
       dispatch(handleAsyncError(error, "Failed to refresh data"));
     }
   }, [filter, refetchAllTasks, refetchCompletedTasks, dispatch]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     if (currentQueryError) {
