@@ -37,6 +37,9 @@ export const selectCurrentTasks = (state: RootState) => {
 
   if (filter === "completed") {
     return selectCompletedTasksData(state);
+  } else if (filter === "incomplete") {
+    const allTasks = selectAllTasksData(state);
+    return allTasks.filter((task: Task) => !task.completed);
   } else {
     return selectAllTasksData(state);
   }
@@ -81,6 +84,10 @@ export const selectDisplayErrorMessage = (state: RootState) => {
     const completedTasksQuery =
       todoApi.endpoints.getCompletedTasks.select(undefined)(state);
     apiError = completedTasksQuery.error;
+  } else if (filter === "incomplete") {
+    const allTasksQuery =
+      todoApi.endpoints.getAllTasks.select(undefined)(state);
+    apiError = allTasksQuery.error;
   } else {
     const allTasksQuery =
       todoApi.endpoints.getAllTasks.select(undefined)(state);

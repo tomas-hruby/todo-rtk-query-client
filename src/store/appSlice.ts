@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type FilterType = "all" | "completed";
+export type FilterType = "all" | "completed" | "incomplete";
 
 interface AppState {
   filter: FilterType;

@@ -41,7 +41,7 @@ function App() {
   // RTK Query hooks
   const { error: allTasksError, refetch: refetchAllTasks } =
     useGetAllTasksQuery(undefined, {
-      skip: filter !== "all",
+      skip: filter !== "all" && filter !== "incomplete",
     });
 
   const { error: completedTasksError, refetch: refetchCompletedTasks } =
@@ -50,7 +50,7 @@ function App() {
     });
 
   const currentQueryError =
-    filter === "all" ? allTasksError : completedTasksError;
+    filter === "completed" ? completedTasksError : allTasksError;
 
   const [createTask] = useCreateTaskMutation();
   const [updateTaskText] = useUpdateTaskTextMutation();
@@ -60,10 +60,10 @@ function App() {
 
   const handleRefreshData = useCallback(async () => {
     try {
-      if (filter === "all") {
-        await refetchAllTasks().unwrap();
-      } else {
+      if (filter === "completed") {
         await refetchCompletedTasks().unwrap();
+      } else {
+        await refetchAllTasks().unwrap();
       }
       dispatch(clearErrorMessage());
     } catch (error) {
@@ -73,10 +73,12 @@ function App() {
 
   useEffect(() => {
     if (currentQueryError) {
-      const errorMessage =
-        filter === "all"
-          ? "Failed to load tasks"
-          : "Failed to load completed tasks";
+      let errorMessage = "Failed to load tasks";
+      if (filter === "completed") {
+        errorMessage = "Failed to load completed tasks";
+      } else if (filter === "incomplete") {
+        errorMessage = "Failed to load incomplete tasks";
+      }
       dispatch(handleAsyncError(currentQueryError, errorMessage));
     }
   }, [currentQueryError, filter, dispatch]);

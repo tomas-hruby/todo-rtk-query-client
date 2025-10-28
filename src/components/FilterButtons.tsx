@@ -1,6 +1,6 @@
 import React from "react";
 
-export type FilterType = "all" | "completed";
+export type FilterType = "all" | "completed" | "incomplete";
 
 interface FilterButtonsProps {
   currentFilter: FilterType;
@@ -23,6 +23,17 @@ export const FilterButtons = React.memo<FilterButtonsProps>(
           All Tasks
         </button>
         <button
+          onClick={() => onFilterChange("incomplete")}
+          className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
+            currentFilter === "incomplete"
+              ? "bg-custom-button-dark text-custom-primary-text"
+              : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
+          }`}
+          aria-label="Show incomplete tasks only"
+        >
+          Incomplete
+        </button>
+        <button
           onClick={() => onFilterChange("completed")}
           className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
             currentFilter === "completed"
@@ -31,7 +42,7 @@ export const FilterButtons = React.memo<FilterButtonsProps>(
           }`}
           aria-label="Show completed tasks only"
         >
-          Completed Only
+          Completed
         </button>
       </div>
     );
