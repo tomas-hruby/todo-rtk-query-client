@@ -12,15 +12,22 @@ export const TaskStats = React.memo<TaskStatsProps>(
     return (
       <div className="flex flex-wrap gap-2 sm:gap-3">
         <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
-          Total: <span className="text-custom-accent">{totalCount}</span>
+          Total:{" "}
+          <span className="text-custom-accent inline-block min-w-[1.5rem] text-center">
+            {totalCount}
+          </span>
         </span>
         <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
           Completed:{" "}
-          <span className="text-custom-price-up">{completedCount}</span>
+          <span className="text-custom-price-up inline-block min-w-[1.5rem] text-center">
+            {completedCount}
+          </span>
         </span>
         <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
           Remaining:{" "}
-          <span className="text-custom-price-down">{remainingCount}</span>
+          <span className="text-custom-price-down inline-block min-w-[1.5rem] text-center">
+            {remainingCount}
+          </span>
         </span>
       </div>
     );
