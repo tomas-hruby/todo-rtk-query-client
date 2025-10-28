@@ -81,50 +81,65 @@ function App() {
     }
   }, [currentQueryError, filter, dispatch]);
 
-  const handleCreateTask = useCallback(async (text: string) => {
-    try {
-      await createTask({ text }).unwrap();
-      dispatch(clearErrorMessage());
-    } catch (error) {
-      dispatch(handleAsyncError(error, "Failed to create task"));
-    }
-  }, [createTask, dispatch]);
-
-  const handleUpdateTask = useCallback(async (id: string, text: string) => {
-    try {
-      await updateTaskText({ id, text }).unwrap();
-      dispatch(clearErrorMessage());
-    } catch (error) {
-      dispatch(handleAsyncError(error, "Failed to update task"));
-    }
-  }, [updateTaskText, dispatch]);
-
-  const handleDeleteTask = useCallback(async (id: string) => {
-    try {
-      await deleteTask(id).unwrap();
-      dispatch(clearErrorMessage());
-    } catch (error) {
-      dispatch(handleAsyncError(error, "Failed to delete task"));
-    }
-  }, [deleteTask, dispatch]);
-
-  const handleToggleComplete = useCallback(async (id: string, completed: boolean) => {
-    try {
-      if (completed) {
-        await completeTask(id).unwrap();
-      } else {
-        await incompleteTask(id).unwrap();
+  const handleCreateTask = useCallback(
+    async (text: string) => {
+      try {
+        await createTask({ text }).unwrap();
+        dispatch(clearErrorMessage());
+      } catch (error) {
+        dispatch(handleAsyncError(error, "Failed to create task"));
       }
-      dispatch(clearErrorMessage());
-    } catch (error) {
-      const action = completed ? "complete" : "mark as incomplete";
-      dispatch(handleAsyncError(error, `Failed to ${action} task`));
-    }
-  }, [completeTask, incompleteTask, dispatch]);
+    },
+    [createTask, dispatch]
+  );
 
-  const handleFilterChange = useCallback((newFilter: FilterType) => {
-    dispatch(setFilter(newFilter));
-  }, [dispatch]);
+  const handleUpdateTask = useCallback(
+    async (id: string, text: string) => {
+      try {
+        await updateTaskText({ id, text }).unwrap();
+        dispatch(clearErrorMessage());
+      } catch (error) {
+        dispatch(handleAsyncError(error, "Failed to update task"));
+      }
+    },
+    [updateTaskText, dispatch]
+  );
+
+  const handleDeleteTask = useCallback(
+    async (id: string) => {
+      try {
+        await deleteTask(id).unwrap();
+        dispatch(clearErrorMessage());
+      } catch (error) {
+        dispatch(handleAsyncError(error, "Failed to delete task"));
+      }
+    },
+    [deleteTask, dispatch]
+  );
+
+  const handleToggleComplete = useCallback(
+    async (id: string, completed: boolean) => {
+      try {
+        if (completed) {
+          await completeTask(id).unwrap();
+        } else {
+          await incompleteTask(id).unwrap();
+        }
+        dispatch(clearErrorMessage());
+      } catch (error) {
+        const action = completed ? "complete" : "mark as incomplete";
+        dispatch(handleAsyncError(error, `Failed to ${action} task`));
+      }
+    },
+    [completeTask, incompleteTask, dispatch]
+  );
+
+  const handleFilterChange = useCallback(
+    (newFilter: FilterType) => {
+      dispatch(setFilter(newFilter));
+    },
+    [dispatch]
+  );
 
   const handleCompleteAllTasks = useCallback(async () => {
     try {
@@ -166,13 +181,16 @@ function App() {
     }
   }, [tasks, deleteTask, dispatch]);
 
-  const handleToggleAll = useCallback(async (checked: boolean) => {
-    if (checked) {
-      handleCompleteAllTasks();
-    } else {
-      handleIncompleteAllTasks();
-    }
-  }, [handleCompleteAllTasks, handleIncompleteAllTasks]);
+  const handleToggleAll = useCallback(
+    async (checked: boolean) => {
+      if (checked) {
+        handleCompleteAllTasks();
+      } else {
+        handleIncompleteAllTasks();
+      }
+    },
+    [handleCompleteAllTasks, handleIncompleteAllTasks]
+  );
 
   return (
     <div className="min-h-screen bg-custom-background text-custom-primary-text flex flex-col">

@@ -10,4 +10,4 @@ export const Footer = React.memo(() => {
   );
 });
 
-Footer.displayName = 'Footer';
+Footer.displayName = "Footer";

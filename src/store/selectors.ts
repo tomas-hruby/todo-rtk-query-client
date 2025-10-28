@@ -16,7 +16,8 @@ export const selectAllTasksData = (state: RootState) => {
 };
 
 export const selectCompletedTasksData = (state: RootState) => {
-  const completedTasksQuery = todoApi.endpoints.getCompletedTasks.select(undefined)(state);
+  const completedTasksQuery =
+    todoApi.endpoints.getCompletedTasks.select(undefined)(state);
   return completedTasksQuery.data || [];
 };
 
@@ -26,13 +27,14 @@ export const selectAllTasksLoading = (state: RootState) => {
 };
 
 export const selectCompletedTasksLoading = (state: RootState) => {
-  const completedTasksQuery = todoApi.endpoints.getCompletedTasks.select(undefined)(state);
+  const completedTasksQuery =
+    todoApi.endpoints.getCompletedTasks.select(undefined)(state);
   return completedTasksQuery.isLoading;
 };
 
 export const selectCurrentTasks = (state: RootState) => {
   const filter = selectFilter(state);
-  
+
   if (filter === "completed") {
     return selectCompletedTasksData(state);
   } else {
@@ -42,7 +44,7 @@ export const selectCurrentTasks = (state: RootState) => {
 
 export const selectCurrentLoading = (state: RootState) => {
   const filter = selectFilter(state);
-  
+
   if (filter === "completed") {
     return selectCompletedTasksLoading(state);
   } else {
@@ -67,19 +69,21 @@ export const selectTaskStats = (state: RootState) => {
 
 export const selectDisplayErrorMessage = (state: RootState) => {
   const appErrorMessage = selectErrorMessage(state);
-  
+
   if (appErrorMessage) {
     return appErrorMessage;
   }
 
   const filter = selectFilter(state);
   let apiError;
-  
+
   if (filter === "completed") {
-    const completedTasksQuery = todoApi.endpoints.getCompletedTasks.select(undefined)(state);
+    const completedTasksQuery =
+      todoApi.endpoints.getCompletedTasks.select(undefined)(state);
     apiError = completedTasksQuery.error;
   } else {
-    const allTasksQuery = todoApi.endpoints.getAllTasks.select(undefined)(state);
+    const allTasksQuery =
+      todoApi.endpoints.getAllTasks.select(undefined)(state);
     apiError = allTasksQuery.error;
   }
 
