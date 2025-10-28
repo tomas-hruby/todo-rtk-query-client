@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "./index";
 import { todoApi } from "../services/todoApi";
 import { Task } from "../types";
@@ -10,53 +11,59 @@ export const selectErrorMessage = (state: RootState) => {
   return state.app.errorMessage;
 };
 
-export const selectAllTasksData = (state: RootState) => {
-  const allTasksQuery = todoApi.endpoints.getAllTasks.select(undefined)(state);
-  return allTasksQuery.data || [];
-};
+// Use RTK Query's built-in selectors directly - they are already memoized
+const selectAllTasksQuery = todoApi.endpoints.getAllTasks.select(undefined);
+const selectCompletedTasksQuery =
+  todoApi.endpoints.getCompletedTasks.select(undefined);
 
-export const selectCompletedTasksData = (state: RootState) => {
-  const completedTasksQuery =
-    todoApi.endpoints.getCompletedTasks.select(undefined)(state);
-  return completedTasksQuery.data || [];
-};
+export const selectAllTasksData = createSelector(
+  [selectAllTasksQuery],
+  (allTasksQuery) => allTasksQuery.data ?? []
+);
 
-export const selectAllTasksLoading = (state: RootState) => {
-  const allTasksQuery = todoApi.endpoints.getAllTasks.select(undefined)(state);
-  return allTasksQuery.isLoading;
-};
+export const selectCompletedTasksData = createSelector(
+  [selectCompletedTasksQuery],
+  (completedTasksQuery) => completedTasksQuery.data ?? []
+);
 
-export const selectCompletedTasksLoading = (state: RootState) => {
-  const completedTasksQuery =
-    todoApi.endpoints.getCompletedTasks.select(undefined)(state);
-  return completedTasksQuery.isLoading;
-};
+export const selectAllTasksLoading = createSelector(
+  [selectAllTasksQuery],
+  (allTasksQuery) => allTasksQuery.isLoading
+);
 
-export const selectCurrentTasks = (state: RootState) => {
-  const filter = selectFilter(state);
+export const selectCompletedTasksLoading = createSelector(
+  [selectCompletedTasksQuery],
+  (completedTasksQuery) => completedTasksQuery.isLoading
+);
 
-  if (filter === "completed") {
-    return selectCompletedTasksData(state);
-  } else if (filter === "incomplete") {
-    const allTasks = selectAllTasksData(state);
-    return allTasks.filter((task: Task) => !task.completed);
-  } else {
-    return selectAllTasksData(state);
+export const selectCurrentTasks = createSelector(
+  [selectFilter, selectAllTasksData, selectCompletedTasksData],
+  (filter, allTasks, completedTasks) => {
+    if (filter === "completed") {
+      return completedTasks;
+    } else if (filter === "incomplete") {
+      return allTasks.filter((task: Task) => !task.completed);
+    } else {
+      return allTasks;
+    }
   }
-};
+);
 
-export const selectCurrentLoading = (state: RootState) => {
-  const filter = selectFilter(state);
-
-  if (filter === "completed") {
-    return selectCompletedTasksLoading(state);
-  } else {
-    return selectAllTasksLoading(state);
+export const selectCurrentLoading = createSelector(
+  [selectFilter, selectAllTasksLoading, selectCompletedTasksLoading],
+  (filter, allTasksLoading, completedTasksLoading) => {
+    if (filter === "completed") {
+      return completedTasksLoading;
+    } else if (filter === "incomplete") {
+      // For incomplete tasks, we need all tasks data to filter
+      return allTasksLoading;
+    } else {
+      return allTasksLoading;
+    }
   }
-};
+);
 
-export const selectTaskStats = (state: RootState) => {
-  const tasks = selectCurrentTasks(state);
+export const selectTaskStats = createSelector([selectCurrentTasks], (tasks) => {
   const totalCount = tasks.length;
   const completedCount = tasks.filter((task: Task) => task.completed).length;
   const remainingCount = totalCount - completedCount;
@@ -68,7 +75,7 @@ export const selectTaskStats = (state: RootState) => {
     allCompleted: totalCount > 0 && completedCount === totalCount,
     hasCompleted: completedCount > 0,
   };
-};
+});
 
 export const selectDisplayErrorMessage = (state: RootState) => {
   const appErrorMessage = selectErrorMessage(state);
