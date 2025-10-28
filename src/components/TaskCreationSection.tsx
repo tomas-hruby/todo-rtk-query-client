@@ -31,7 +31,7 @@ export const TaskCreationSection = React.memo<TaskCreationSectionProps>(
               value={taskText}
               onChange={(e) => setTaskText(e.target.value)}
               placeholder="Enter a new task..."
-              className="flex-1 bg-custom-background border border-custom-border rounded-lg px-4 py-3 text-custom-primary-text placeholder-custom-secondary-text focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent transition-all text-sm sm:text-base"
+              className="flex-1 bg-custom-background border border-custom-border rounded-lg px-4 py-3 text-custom-primary-text placeholder-custom-secondary-text focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent text-sm sm:text-base"
               required
               aria-label="Task description"
             />

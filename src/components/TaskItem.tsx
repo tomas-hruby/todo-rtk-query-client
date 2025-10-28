@@ -31,7 +31,7 @@ export const TaskItem = React.memo<TaskItemProps>(
 
     return (
       <div
-        className={`rounded-lg border border-custom-border bg-custom-surface p-3 transition-all duration-200 hover:bg-custom-background sm:p-4 ${
+        className={`rounded-lg border border-custom-border bg-custom-surface p-3 hover:bg-custom-background sm:p-4 ${
           task.completed ? "opacity-75" : ""
         }`}
       >
@@ -59,14 +59,14 @@ export const TaskItem = React.memo<TaskItemProps>(
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <button
                     onClick={handleUpdate}
-                    className="rounded-lg bg-custom-price-up px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-600 sm:text-base"
+                    className="rounded-lg bg-custom-price-up px-4 py-2 text-sm font-medium text-white hover:bg-green-600 sm:text-base"
                     aria-label="Save task changes"
                   >
                     Save
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="rounded-lg border border-custom-border bg-custom-background px-4 py-2 text-sm font-medium text-custom-secondary-text transition-colors hover:bg-custom-border sm:text-base"
+                    className="rounded-lg border border-custom-border bg-custom-background px-4 py-2 text-sm font-medium text-custom-secondary-text hover:bg-custom-border sm:text-base"
                     aria-label="Cancel editing"
                   >
                     Cancel
@@ -89,14 +89,14 @@ export const TaskItem = React.memo<TaskItemProps>(
                   <div className="flex gap-2 flex-shrink-0">
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors"
+                      className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded-lg text-xs sm:text-sm font-medium"
                       aria-label={`Edit task: ${task.text}`}
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete(task.id)}
-                      className="bg-custom-price-down hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors"
+                      className="bg-custom-price-down hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs sm:text-sm font-medium"
                       aria-label={`Delete task: ${task.text}`}
                     >
                       Delete

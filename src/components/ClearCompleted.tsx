@@ -17,7 +17,7 @@ export const ClearCompleted = React.memo<ClearCompletedProps>(
         <button
           onClick={onDeleteCompleted}
           disabled={loading}
-          className="w-full px-4 py-3 rounded-lg text-sm sm:text-base font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full px-4 py-3 rounded-lg text-sm sm:text-base font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label={`Delete ${completedCount} completed task${
             completedCount !== 1 ? "s" : ""
           }`}

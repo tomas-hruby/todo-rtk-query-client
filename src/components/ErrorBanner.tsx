@@ -25,7 +25,7 @@ export const ErrorBanner = React.memo<ErrorBannerProps>(
             {currentQueryError && (
               <button
                 onClick={onRetry}
-                className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium transition-colors"
+                className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium"
                 aria-label="Retry loading data"
               >
                 Retry
