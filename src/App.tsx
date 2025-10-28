@@ -9,8 +9,10 @@ import {
   useCompleteTaskMutation,
   useIncompleteTaskMutation,
 } from "./services/todoApi";
-import { TaskForm } from "./components/TaskForm";
-import { TaskList } from "./components/TaskList";
+import { Header } from "./components/Header";
+import { ErrorBanner } from "./components/ErrorBanner";
+import { TaskCreationSection } from "./components/TaskCreationSection";
+import { TaskManager } from "./components/TaskManager";
 import { Footer } from "./components/Footer";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { setFilter } from "./store/appSlice";
@@ -23,6 +25,7 @@ import {
   selectDisplayErrorMessage,
 } from "./store/selectors";
 import { Task } from "./types";
+import { FilterType } from "./components/FilterButtons";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -35,7 +38,7 @@ function App() {
     useAppSelector(selectTaskStats);
   const errorMessage = useAppSelector(selectDisplayErrorMessage);
 
-  // RTK Query hooks with error handling and refetch
+  // RTK Query hooks
   const { error: allTasksError, refetch: refetchAllTasks } =
     useGetAllTasksQuery(undefined, {
       skip: filter !== "all",
@@ -46,7 +49,6 @@ function App() {
       skip: filter !== "completed",
     });
 
-  // Current query error based on filter
   const currentQueryError =
     filter === "all" ? allTasksError : completedTasksError;
 
@@ -56,7 +58,6 @@ function App() {
   const [completeTask] = useCompleteTaskMutation();
   const [incompleteTask] = useIncompleteTaskMutation();
 
-  // Handler for refreshing data when queries fail
   const handleRefreshData = useCallback(async () => {
     try {
       if (filter === "all") {
@@ -70,7 +71,6 @@ function App() {
     }
   }, [filter, refetchAllTasks, refetchCompletedTasks, dispatch]);
 
-  // Handle query errors
   useEffect(() => {
     if (currentQueryError) {
       const errorMessage =
@@ -122,7 +122,7 @@ function App() {
     }
   }, [completeTask, incompleteTask, dispatch]);
 
-  const handleFilterChange = useCallback((newFilter: "all" | "completed") => {
+  const handleFilterChange = useCallback((newFilter: FilterType) => {
     dispatch(setFilter(newFilter));
   }, [dispatch]);
 
@@ -166,149 +166,43 @@ function App() {
     }
   }, [tasks, deleteTask, dispatch]);
 
+  const handleToggleAll = useCallback(async (checked: boolean) => {
+    if (checked) {
+      handleCompleteAllTasks();
+    } else {
+      handleIncompleteAllTasks();
+    }
+  }, [handleCompleteAllTasks, handleIncompleteAllTasks]);
+
   return (
-    console.log("App rendered"),
     <div className="min-h-screen bg-custom-background text-custom-primary-text flex flex-col">
-      <header className="bg-custom-surface shadow-lg border-b border-custom-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 text-custom-primary-text">
-            Todo App
-          </h1>
-        </div>
-      </header>
+      <Header />
 
       {errorMessage && (
-        <div 
-          className="fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-4xl w-full px-4 sm:px-6"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div className="bg-custom-error-bg border border-custom-price-down text-custom-error-text p-3 sm:p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 shadow-lg">
-            <span className="text-sm sm:text-base">{errorMessage}</span>
-            <div className="flex gap-2 w-full sm:w-auto justify-end sm:ml-4">
-              {currentQueryError && (
-                <button
-                  onClick={handleRefreshData}
-                  className="bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text px-3 py-1 rounded text-sm font-medium transition-colors"
-                  aria-label="Retry loading data"
-                >
-                  Retry
-                </button>
-              )}
-              <button
-                onClick={() => dispatch(clearErrorMessage())}
-                className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl"
-                aria-label="Close error message"
-              >
-                ×
-              </button>
-            </div>
-          </div>
-        </div>
+        <ErrorBanner
+          errorMessage={errorMessage}
+          currentQueryError={currentQueryError}
+          onRetry={handleRefreshData}
+        />
       )}
 
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-8">
-        <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
-          <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-custom-primary-text">
-              Add New Task
-            </h2>
-            <TaskForm onCreateTask={handleCreateTask} />
-          </div>
-        </section>
+        <TaskCreationSection onCreateTask={handleCreateTask} />
 
-        <section className="bg-custom-surface rounded-xl shadow-xl border border-custom-border">
-          <div className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-6">
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
-                  Total:{" "}
-                  <span className="text-custom-accent">{totalCount}</span>
-                </span>
-                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
-                  Completed:{" "}
-                  <span className="text-custom-price-up">{completedCount}</span>
-                </span>
-                <span className="bg-custom-background px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-custom-border">
-                  Remaining:{" "}
-                  <span className="text-custom-price-down">
-                    {totalCount - completedCount}
-                  </span>
-                </span>
-              </div>
-
-              <div className="flex gap-2 w-full sm:w-auto">
-                <button
-                  onClick={() => handleFilterChange("all")}
-                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
-                    filter === "all"
-                      ? "bg-custom-button-dark text-custom-primary-text"
-                      : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
-                  }`}
-                  aria-label="Show all tasks"
-                >
-                  All Tasks
-                </button>
-                <button
-                  onClick={() => handleFilterChange("completed")}
-                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors ${
-                    filter === "completed"
-                      ? "bg-custom-button-dark text-custom-primary-text"
-                      : "bg-custom-background text-custom-secondary-text hover:bg-custom-border border border-custom-border"
-                  }`}
-                  aria-label="Show completed tasks only"
-                >
-                  Completed Only
-                </button>
-              </div>
-            </div>
-
-            <div className="px-4 pb-4">
-              <label className="flex items-start gap-4 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={allCompleted}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      handleCompleteAllTasks();
-                    } else {
-                      handleIncompleteAllTasks();
-                    }
-                  }}
-                  disabled={loading || tasks.length === 0}
-                  className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus:ring-custom-accent focus:ring-2 disabled:opacity-50"
-                  aria-label="Toggle all tasks completion status"
-                />
-                <span className="text-custom-primary-text font-medium text-sm sm:text-base">
-                  Toggle all tasks
-                </span>
-              </label>
-            </div>
-
-            <TaskList
-              tasks={tasks}
-              loading={loading}
-              onUpdateTask={handleUpdateTask}
-              onDeleteTask={handleDeleteTask}
-              onToggleComplete={handleToggleComplete}
-            />
-
-            {completedCount > 0 && (
-              <div className="px-4 sm:px-6 pt-4 border-t border-custom-border">
-                <button
-                  onClick={handleDeleteCompletedTasks}
-                  disabled={loading}
-                  className="w-full px-4 py-3 rounded-lg text-sm sm:text-base font-medium bg-custom-button-dark hover:bg-custom-button-dark-hover text-custom-primary-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  aria-label={`Delete ${completedCount} completed task${completedCount !== 1 ? 's' : ''}`}
-                >
-                  Clear {completedCount} completed task
-                  {completedCount !== 1 ? "s" : ""}
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+        <TaskManager
+          tasks={tasks}
+          loading={loading}
+          filter={filter}
+          totalCount={totalCount}
+          completedCount={completedCount}
+          allCompleted={allCompleted}
+          onFilterChange={handleFilterChange}
+          onUpdateTask={handleUpdateTask}
+          onDeleteTask={handleDeleteTask}
+          onToggleComplete={handleToggleComplete}
+          onToggleAll={handleToggleAll}
+          onDeleteCompleted={handleDeleteCompletedTasks}
+        />
       </main>
 
       <Footer />
