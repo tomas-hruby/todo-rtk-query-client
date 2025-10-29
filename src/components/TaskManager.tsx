@@ -1,10 +1,10 @@
 import React from "react";
 import { TaskStats } from "./TaskStats";
-import { FilterButtons, FilterType } from "./FilterButtons";
+import { FilterButtons } from "./FilterButtons";
 import { TaskList } from "./TaskList";
 import { BulkActions } from "./BulkActions";
 import { ClearCompleted } from "./ClearCompleted";
-import { Task } from "../types";
+import { FilterType, Task } from "../types";
 
 interface TaskManagerProps {
   tasks: Task[];

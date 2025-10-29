@@ -1,9 +1,7 @@
 import React from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
-interface HeaderProps {}
-
-export const Header = React.memo<HeaderProps>(() => {
+export const Header = React.memo(() => {
   return (
     <header className="bg-custom-surface shadow-lg border-b border-custom-border">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">

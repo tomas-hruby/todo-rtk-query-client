@@ -25,8 +25,7 @@ import {
   selectTaskStats,
   selectDisplayErrorMessage,
 } from "./store/selectors";
-import { Task } from "./types";
-import { FilterType } from "./components/FilterButtons";
+import { FilterType, Task } from "./types";
 
 function App() {
   const dispatch = useAppDispatch();

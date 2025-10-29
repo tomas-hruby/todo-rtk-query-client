@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FilterType } from "../types";
 
-export type ThemeType = "light" | "dark";
+type ThemeType = "light" | "dark";
 
 interface AppState {
   filter: FilterType;

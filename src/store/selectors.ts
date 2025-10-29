@@ -15,7 +15,6 @@ export const selectErrorMessage = (state: RootState) => {
   return state.app.errorMessage;
 };
 
-// Use RTK Query's built-in selectors directly - they are already memoized
 const selectAllTasksQuery = todoApi.endpoints.getAllTasks.select(undefined);
 const selectCompletedTasksQuery =
   todoApi.endpoints.getCompletedTasks.select(undefined);

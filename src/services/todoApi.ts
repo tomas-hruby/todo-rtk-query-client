@@ -232,7 +232,6 @@ export const todoApi = createApi({
   }),
 });
 
-// Export hooks for usage in functional components
 export const {
   useGetAllTasksQuery,
   useGetCompletedTasksQuery,
