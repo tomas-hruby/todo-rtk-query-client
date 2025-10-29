@@ -41,7 +41,7 @@ export const TaskItem = React.memo<TaskItemProps>(
             type="checkbox"
             checked={task.completed}
             onChange={(e) => onToggleComplete(task.id, e.target.checked)}
-            className="mt-1 h-4 w-4 rounded border-custom-border bg-custom-background text-custom-accent focus:ring-2 focus:ring-custom-accent sm:h-5 sm:w-5"
+            className="mt-1 h-4 w-4 rounded border-custom-border bg-custom-background text-custom-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-custom-accent focus-visible:ring-opacity-50 sm:h-5 sm:w-5"
             aria-label={`Mark task "${task.text}" as ${task.completed ? "incomplete" : "complete"}`}
           />
 

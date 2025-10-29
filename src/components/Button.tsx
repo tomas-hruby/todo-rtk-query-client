@@ -42,7 +42,7 @@ export const Button = React.memo<ButtonProps>(
     ...props
   }) => {
     const baseStyles =
-      "font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed";
+      "font-medium rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-custom-accent focus-visible:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed";
     const variantClass = variantStyles[variant];
     const sizeClass = sizeStyles[size];
     const widthClass = fullWidth ? "w-full" : "w-auto";

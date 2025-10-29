@@ -35,7 +35,7 @@ export const ErrorBanner = React.memo<ErrorBannerProps>(
             )}
             <button
               onClick={() => dispatch(clearErrorMessage())}
-              className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl focus:outline-none focus:ring-2 focus:ring-custom-accent focus:ring-opacity-50"
+              className="text-custom-error-text hover:text-custom-primary-text font-bold text-lg sm:text-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-custom-accent focus-visible:ring-opacity-50"
               aria-label="Close error message"
             >
               ×

@@ -17,7 +17,7 @@ export const BulkActions = React.memo<BulkActionsProps>(
             checked={allCompleted}
             onChange={(e) => onToggleAll(e.target.checked)}
             disabled={loading || !hasTask}
-            className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus:ring-custom-accent focus:ring-2 disabled:opacity-50"
+            className="mt-1 h-5 w-5 text-custom-accent bg-custom-background border-custom-border rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-custom-accent focus-visible:ring-opacity-50 disabled:opacity-50"
             aria-label="Toggle all tasks completion status"
           />
           <span className="text-custom-primary-text font-medium text-sm sm:text-base">
