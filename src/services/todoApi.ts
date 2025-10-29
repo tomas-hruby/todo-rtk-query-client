@@ -1,10 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Task, CreateTaskRequest } from "../types";
+import { v4 as uuidv4 } from "uuid";
+
+const baseUrl = "http://localhost:8080";
 
 export const todoApi = createApi({
   reducerPath: "todoApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080",
+    baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
       return headers;
@@ -31,7 +34,7 @@ export const todoApi = createApi({
       async onQueryStarted(taskData, { dispatch, queryFulfilled }) {
         // new task with temporary ID for optimistic update
         const tempTask: Task = {
-          id: `temp-${Date.now()}`,
+          id: uuidv4(),
           text: taskData.text,
           completed: false,
           createdDate: Date.now(),
