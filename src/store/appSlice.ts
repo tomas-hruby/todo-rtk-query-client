@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FilterType } from "../types";
 
-export type FilterType = "all" | "completed" | "incomplete";
 export type ThemeType = "light" | "dark";
 
 interface AppState {

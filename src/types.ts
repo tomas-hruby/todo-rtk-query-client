@@ -13,3 +13,5 @@ export interface CreateTaskRequest {
 export interface UpdateTaskRequest {
   text: string;
 }
+
+export type FilterType = "all" | "completed" | "incomplete";

@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "./Button";
-
-export type FilterType = "all" | "completed" | "incomplete";
+import { FilterType } from "../types";
 
 interface FilterButtonsProps {
   currentFilter: FilterType;
